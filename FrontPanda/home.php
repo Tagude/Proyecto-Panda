@@ -15,7 +15,7 @@ $nombre = $_SESSION['nombre_usuario'];
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Home - MyPanda</title>
+    <title>Home</title>
     <link rel="stylesheet" href="CSS/styles.css" />
     <link rel="shortcut icon" href="IMG/PANDA icon.ico" type="image/x-icon" />
 </head>
@@ -36,9 +36,9 @@ $nombre = $_SESSION['nombre_usuario'];
 <main>
     <h1>Bienvenido, <?php echo htmlspecialchars($nombre); ?> 👋</h1>
     <div class="opciones">
-        <a href="registrar.html" class="opcion">
+        <a href="registrarVenta.html" class="opcion">
             <img src="IMG/vender.png" alt="Registrar">
-            <span>Registrar compra</span>
+            <span>Registrar Venta</span>
         </a>
         <a href="inventario.html" class="opcion">
             <img src="IMG/inventario.png" alt="Inventario">

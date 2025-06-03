@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Venta</title>
+  <link rel="stylesheet" href="CSS/styles.css" />
+  <link rel="shortcut icon" href="IMG/PANDA icon.ico" type="image/x-icon" />
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img class="logos" src="IMG/PANDA.webp" alt="Logo">
+  </div>
+  <div class="opciones">
+    <a href="logout.php" class="opcion">
+      <img src="IMG/sesion.png" alt="Cerrar Sesión">
+      <span>Cerrar Sesión</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <h1>Registrar Venta 🛒</h1>
+
+  <form action="procesarVenta.php" method="POST" class="formulario" id="form-venta">
+    <div id="productos-container">
+      <div class="producto-container">
+        <label>Producto:
+            <select name="producto[]" class="producto">
+                <option value="">Seleccione un producto</option>
+                <!-- opciones cargadas dinámicamente -->
+            </select>
+        </label>
+
+        <strong>Valor del producto: <span class="precio_registrado">$0</span></strong><br>
+
+        <label>Cantidad: <input type="number" name="cantidad[]"></label>
+        <label>Valor pagado: <input type="number" name="precio_unitario[]" class="precio_unitario"></label>
+        </div>
+    </div>
+
+    <button type="button" onclick="agregarProducto()">➕ Agregar otro producto</button>
+
+    <label>Medio de Pago:</label>
+    <select name="medio_pago" id="medio_pago" required>
+      <option disabled selected>Seleccione un medio de pago</option>
+    </select>
+
+    <input type="submit" value="Registrar Venta">
+  </form>
+
+  <div class="opciones">
+    <a href="home.php" class="opcion">
+      <img src="IMG/back.png" alt="Volver">
+      <span>Regresar</span>
+    </a>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  cargarDatos();
+
+  document.getElementById('productos-container').addEventListener('change', function (e) {
+    if (e.target.classList.contains('producto')) {
+      const select = e.target;
+      const contenedor = select.closest('.producto-container');
+      const spanPrecio = contenedor.querySelector('.precio_registrado');
+      const id_producto = select.value;
+
+      if (id_producto !== "") {
+        fetch('obtener_precio.php?id_producto=' + id_producto)
+          .then(res => res.json())
+          .then(data => {
+            spanPrecio.textContent = '$' + Number(data.precio).toLocaleString();
+            contenedor.querySelector('input.precio_unitario').value = data.precio;
+          })
+          .catch(error => {
+            console.error("Error al obtener el precio:", error);
+          });
+      } else {
+        spanPrecio.textContent = "$0";
+        contenedor.querySelector('input.precio_unitario').value = "";
+      }
+    }
+  });
+});
+
+function cargarDatos() {
+  fetch('cargar_datos.php?tipo=productos')
+    .then(response => response.text())
+    .then(data => {
+      document.querySelectorAll('select.producto').forEach(select => {
+        select.innerHTML += data;
+      });
+    });
+
+  fetch('cargar_datos.php?tipo=mediopago')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('medio_pago').innerHTML += data;
+    });
+}
+
+function agregarProducto() {
+  const contenedor = document.getElementById('productos-container');
+  const item = document.querySelector('.producto-container');
+  const nuevo = item.cloneNode(true);
+
+  nuevo.querySelector('select.producto').value = '';
+  nuevo.querySelector('.precio_registrado').textContent = '$0';
+  nuevo.querySelector('input[name="cantidad[]"]').value = '';
+  nuevo.querySelector('input.precio_unitario').value = '';
+
+  contenedor.appendChild(nuevo);
+}
+</script>
+
+</main>
+</body>
+</html>

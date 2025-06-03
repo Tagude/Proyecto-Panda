@@ -162,3 +162,9 @@ header .opciones img{
     height: 50px;
     margin-bottom: 10px;
 }
+
+.precio-actual {
+  font-size: 1rem;
+  color: green;
+  margin-top: 5px;
+}
